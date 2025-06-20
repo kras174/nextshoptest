@@ -23,7 +23,7 @@ export type ProductsProps = {
 	animatedIds: Set<number>;
 };
 
-const Products: React.FC<ProductsProps> = ({
+const Products: React.FC<ProductsProps> = React.memo(({
 	products,
 	cart,
 	loading,
@@ -78,6 +78,8 @@ const Products: React.FC<ProductsProps> = ({
 		<div ref={loaderRef} />
 		{!hasMore && !loading && <div className="text-center text-gray-400 mt-4">Больше товаров нет</div>}
 	</section>
-);
+));
+
+Products.displayName = 'Products';
 
 export default Products;

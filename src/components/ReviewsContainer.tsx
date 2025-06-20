@@ -4,7 +4,7 @@ import Reviews, { Review } from './Reviews';
 import Loader from './Loader';
 import Skeleton from './Skeleton';
 
-const ReviewsContainer = () => {
+const ReviewsContainer = React.memo(() => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +42,8 @@ const ReviewsContainer = () => {
       <Reviews reviews={reviews} loading={loading} error={error} />
     </>
   );
-};
+});
+
+ReviewsContainer.displayName = 'ReviewsContainer';
 
 export default ReviewsContainer;

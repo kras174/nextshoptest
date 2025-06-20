@@ -53,7 +53,7 @@ function Modal({ open, onClose, children }: { open: boolean; onClose: () => void
   );
 }
 
-const Cart: React.FC<CartProps> = ({
+const Cart: React.FC<CartProps> = React.memo(({
   cartItems,
   totalPrice,
   phone,
@@ -164,6 +164,8 @@ const Cart: React.FC<CartProps> = ({
       </Modal>
     </section>
   );
-};
+});
+
+Cart.displayName = 'Cart';
 
 export default Cart;

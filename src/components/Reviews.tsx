@@ -12,7 +12,7 @@ export type ReviewsProps = {
   error: string | null;
 };
 
-const Reviews: React.FC<ReviewsProps> = ({ reviews, loading, error }) => (
+const Reviews: React.FC<ReviewsProps> = React.memo(({ reviews, loading, error }) => (
   <section className="flex justify-center">
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 w-full max-w-4xl mx-auto mb-4">
       {loading && <div>Загрузка отзывов...</div>}
@@ -28,6 +28,8 @@ const Reviews: React.FC<ReviewsProps> = ({ reviews, loading, error }) => (
       ))}
     </div>
   </section>
-);
+));
+
+Reviews.displayName = 'Reviews';
 
 export default Reviews;

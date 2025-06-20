@@ -15,7 +15,7 @@ type ApiResponse = {
   items: Product[];
 };
 
-const ProductsContainer = () => {
+const ProductsContainer = React.memo(() => {
   const [products, setProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -127,6 +127,8 @@ const ProductsContainer = () => {
       />
     </>
   );
-};
+});
+
+ProductsContainer.displayName = 'ProductsContainer';
 
 export default ProductsContainer;

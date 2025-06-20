@@ -14,7 +14,7 @@ function formatPhoneFromDigits(digits: string) {
   return res;
 }
 
-const CartContainer = () => {
+const CartContainer = React.memo(() => {
   const { cart, setCart } = useCart();
   const { productsMap } = useProductsMap();
   const totalPrice = Object.entries(cart).reduce((sum, [id, qty]) => {
@@ -101,6 +101,8 @@ const CartContainer = () => {
       onModalClose={() => setModalOpen(false)}
     />
   );
-};
+});
+
+CartContainer.displayName = 'CartContainer';
 
 export default CartContainer;
