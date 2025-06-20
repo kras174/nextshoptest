@@ -3,6 +3,8 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Products, { Product } from './Products';
 import { useCart, useProductsMap } from './ProductsContext';
 import { useAppearAnimation } from '../hooks/useAppearAnimation';
+import Loader from './Loader';
+import Skeleton from './Skeleton';
 
 const PAGE_SIZE = 20;
 
@@ -101,19 +103,29 @@ const ProductsContainer = () => {
   };
 
   return (
-    <Products
-      products={products}
-      cart={cart}
-      loading={loading}
-      error={error}
-      hasMore={hasMore}
-      onBuy={handleBuy}
-      onIncrement={handleIncrement}
-      onDecrement={handleDecrement}
-      onInput={handleInput}
-      loaderRef={loader as React.RefObject<HTMLDivElement>}
-      animatedIds={animatedIds}
-    />
+    <>
+      {loading && products.length === 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-7">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Skeleton key={i} className="h-[270px] sm:h-[370px] w-full" />
+          ))}
+        </div>
+      ) : null}
+      {loading && products.length === 0 && <Loader className="mt-8" />}
+      <Products
+        products={products}
+        cart={cart}
+        loading={loading}
+        error={error}
+        hasMore={hasMore}
+        onBuy={handleBuy}
+        onIncrement={handleIncrement}
+        onDecrement={handleDecrement}
+        onInput={handleInput}
+        loaderRef={loader as React.RefObject<HTMLDivElement>}
+        animatedIds={animatedIds}
+      />
+    </>
   );
 };
 
