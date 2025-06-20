@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Products, { Product } from './Products';
+import Products from './Products';
 
 describe('Products', () => {
-  const products: Product[] = [
+  const products = [
     {
       id: 1,
       image_url: 'img1.jpg',

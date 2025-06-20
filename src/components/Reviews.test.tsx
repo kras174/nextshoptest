@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Reviews, { Review } from './Reviews';
+import Reviews from './Reviews';
 
 describe('Reviews', () => {
-  const reviews: Review[] = [
+  const reviews = [
     { id: 1, text: 'Great product!' },
     { id: 2, text: 'Not bad.' },
   ];

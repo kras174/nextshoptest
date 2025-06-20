@@ -1,7 +1,6 @@
 "use client"
 import React, { useState, useRef, useEffect } from 'react';
-import InputMask from 'react-input-mask';
-import type { InputHTMLAttributes } from 'react';
+import { IMaskInput } from 'react-imask';
 
 export type CartItem = {
   id: string;
@@ -120,29 +119,22 @@ const Cart: React.FC<CartProps> = React.memo(({
       <form className="flex flex-col gap-3" onSubmit={onSubmit} role="form" aria-labelledby="cart-form-heading">
         <span id="cart-form-heading" className="sr-only">Форма заказа</span>
         <div className="flex flex-row items-center gap-2">
-          <InputMask
-            mask="+7 (999) 999-99-99"
-            maskChar={"_"}
+          <IMaskInput
+            mask="+7 (000) 000-00-00"
             value={phone}
-            onChange={onPhoneChange}
+            onAccept={(value: string) => onPhoneChange({ target: { value } } as React.ChangeEvent<HTMLInputElement>)}
             disabled={loading}
-          >
-            {(inputProps: InputHTMLAttributes<HTMLInputElement>) => (
-              <input
-                {...inputProps}
-                ref={phoneInputRef}
-                id="phone"
-                name="phone"
-                type="tel"
-                className="border rounded px-2 sm:px-3 py-2 bg-white text-black flex-1 text-sm sm:text-base"
-                placeholder="+7 (___) ___-__-__"
-                autoComplete="tel"
-                aria-label="Телефон для связи"
-                aria-required="true"
-                aria-invalid={!!error}
-              />
-            )}
-          </InputMask>
+            inputRef={phoneInputRef}
+            id="phone"
+            name="phone"
+            type="tel"
+            className="border rounded px-2 sm:px-3 py-2 bg-white text-black flex-1 text-sm sm:text-base"
+            placeholder="+7 (___) ___-__-__"
+            autoComplete="tel"
+            aria-label="Телефон для связи"
+            aria-required="true"
+            aria-invalid={!!error}
+          />
           <button
             type="submit"
             className="bg-black text-white rounded px-4 sm:px-6 py-2 font-semibold text-sm sm:text-base h-full"
