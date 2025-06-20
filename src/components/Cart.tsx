@@ -35,6 +35,16 @@ function Modal({ open, onClose, children }: { open: boolean; onClose: () => void
   );
 }
 
+function formatPhoneFromDigits(digits: string) {
+  if (!digits) return '';
+  let res = '+7';
+  if (digits.length > 1) res += ' (' + digits.slice(1, 4);
+  if (digits.length >= 4) res += ') ' + digits.slice(4, 7);
+  if (digits.length >= 7) res += '-' + digits.slice(7, 9);
+  if (digits.length >= 9) res += '-' + digits.slice(9, 11);
+  return res;
+}
+
 const Cart = () => {
   const { cart, setCart } = useCart();
   const { productsMap } = useProductsMap();
@@ -43,25 +53,42 @@ const Cart = () => {
     return sum + (product ? product.price * qty : 0);
   }, 0);
 
-  const [phone, setPhone] = useState(() => {
+  const [phoneDigits, setPhoneDigits] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem('phone');
-        if (saved) return saved;
+        const digits = saved ? saved.replace(/\D/g, '') : '';
+        return digits;
       } catch {}
     }
     return '';
   });
+  const phone = formatPhoneFromDigits(phoneDigits);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('phone', phone);
+      localStorage.setItem('phone', phoneDigits);
     }
-  }, [phone]);
+  }, [phoneDigits]);
 
   const [error, setError] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    // Если поле очищено — оставить пустым
+    const digits = raw.replace(/\D/g, '');
+    if (digits === '' || raw === '' || raw === '+') {
+      setPhoneDigits('');
+      return;
+    }
+    let result = digits;
+    // Всегда начинать с 7
+    if (result.startsWith('8')) result = '7' + result.slice(1);
+    if (!result.startsWith('7')) result = '7' + result;
+    setPhoneDigits(result.slice(0, 11));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,7 +110,7 @@ const Cart = () => {
       if (!res.ok) throw new Error('Ошибка при отправке заказа');
       setModalOpen(true);
       setCart({});
-      setPhone('');
+      setPhoneDigits('');
     } catch (err) {
       console.error(err);
       setError('Ошибка при отправке заказа. Попробуйте ещё раз.');
@@ -147,7 +174,7 @@ const Cart = () => {
             className="border rounded px-2 sm:px-3 py-2 bg-white text-black flex-1 text-sm sm:text-base"
             placeholder="+7 (___) ___-__-__"
             value={phone}
-            onChange={e => setPhone(e.target.value)}
+            onChange={handlePhoneChange}
             disabled={loading}
           />
           <button
