@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Products, { Product } from './Products';
 import { useCart, useProductsMap } from './ProductsContext';
+import { useAppearAnimation } from '../hooks/useAppearAnimation';
 
 const PAGE_SIZE = 20;
 
@@ -21,7 +22,7 @@ const ProductsContainer = () => {
   const loader = useRef<HTMLDivElement | null>(null);
   const { cart, setCart } = useCart();
   const { setProductsMap } = useProductsMap();
-  const [animatedIds, setAnimatedIds] = useState<Set<number>>(new Set());
+  const animatedIds = useAppearAnimation(products.map(p => p.id)) as Set<number>;
 
   const fetchProducts = useCallback(async (pageNum: number) => {
     setLoading(true);
@@ -65,18 +66,6 @@ const ProductsContainer = () => {
       if (loader.current) observer.unobserve(loader.current);
     };
   }, [hasMore, loading]);
-
-  useEffect(() => {
-    // Анимировать только новые товары
-    products.forEach((product) => {
-      if (!animatedIds.has(product.id)) {
-        setTimeout(() => {
-          setAnimatedIds((prev) => new Set(prev).add(product.id));
-        }, 50);
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [products]);
 
   const handleBuy = (id: number) => {
     setCart((prev) => ({ ...prev, [id]: 1 }));

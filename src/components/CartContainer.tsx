@@ -1,7 +1,8 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Cart, { CartItem } from './Cart';
 import { useCart, useProductsMap } from './ProductsContext';
+import { useLocalStorageState } from '../hooks/useLocalStorageState';
 
 function formatPhoneFromDigits(digits: string) {
   if (!digits) return '';
@@ -21,23 +22,8 @@ const CartContainer = () => {
     return sum + (product ? product.price * qty : 0);
   }, 0);
 
-  const [phoneDigits, setPhoneDigits] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('phone');
-        const digits = saved ? saved.replace(/\D/g, '') : '';
-        return digits;
-      } catch {}
-    }
-    return '';
-  });
+  const [phoneDigits, setPhoneDigits] = useLocalStorageState<string>('phone', '');
   const phone = formatPhoneFromDigits(phoneDigits);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('phone', phoneDigits);
-    }
-  }, [phoneDigits]);
 
   const [error, setError] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
