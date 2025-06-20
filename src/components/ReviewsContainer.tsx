@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Reviews, { Review } from './Reviews';
 import Loader from './Loader';
 import Skeleton from './Skeleton';
+import { fetchReviews as apiFetchReviews } from '../api/shopApi';
 
 const ReviewsContainer = React.memo(() => {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -12,9 +13,7 @@ const ReviewsContainer = React.memo(() => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await fetch('http://o-complex.com:1337/reviews');
-        if (!res.ok) throw new Error('Failed to fetch reviews');
-        const data = await res.json();
+        const data = await apiFetchReviews();
         setReviews(data);
       } catch (err: unknown) {
         if (err instanceof Error) {

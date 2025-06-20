@@ -5,15 +5,9 @@ import { useCart, useProductsMap } from './ProductsContext';
 import { useAppearAnimation } from '../hooks/useAppearAnimation';
 import Loader from './Loader';
 import Skeleton from './Skeleton';
+import { fetchProducts as apiFetchProducts } from '../api/shopApi';
 
 const PAGE_SIZE = 20;
-
-type ApiResponse = {
-  page: number;
-  amount: number;
-  total: number;
-  items: Product[];
-};
 
 const ProductsContainer = React.memo(() => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -30,9 +24,7 @@ const ProductsContainer = React.memo(() => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`http://o-complex.com:1337/products?page=${pageNum}&page_size=${PAGE_SIZE}`);
-      if (!res.ok) throw new Error('Failed to fetch products');
-      const data: ApiResponse = await res.json();
+      const data = await apiFetchProducts(pageNum, PAGE_SIZE);
       setProducts((prev) => [...prev, ...data.items]);
       setProductsMap((prev) => {
         const newMap = { ...prev };

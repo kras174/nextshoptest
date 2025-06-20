@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Cart, { CartItem } from './Cart';
 import { useCart, useProductsMap } from './ProductsContext';
 import { useLocalStorageState } from '../hooks/useLocalStorageState';
+import { submitOrder as apiSubmitOrder } from '../api/shopApi';
 
 function formatPhoneFromDigits(digits: string) {
   if (!digits) return '';
@@ -51,15 +52,10 @@ const CartContainer = React.memo(() => {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch('http://o-complex.com:1337/order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone: phoneDigits,
-          cart: Object.entries(cart).map(([id, qty]) => ({ id: Number(id), quantity: qty })),
-        }),
+      await apiSubmitOrder({
+        phone: phoneDigits,
+        cart: Object.entries(cart).map(([id, qty]) => ({ id: Number(id), quantity: qty })),
       });
-      if (!res.ok) throw new Error('Ошибка при отправке заказа');
       setModalOpen(true);
       setCart({});
       setPhoneDigits('');
