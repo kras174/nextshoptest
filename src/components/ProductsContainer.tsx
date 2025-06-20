@@ -56,8 +56,9 @@ const ProductsContainer = React.memo(() => {
       { threshold: 1 }
     );
     if (loader.current) observer.observe(loader.current);
+    const currentLoader = loader.current;
     return () => {
-      if (loader.current) observer.unobserve(loader.current);
+      if (currentLoader) observer.unobserve(currentLoader);
     };
   }, [hasMore, loading]);
 

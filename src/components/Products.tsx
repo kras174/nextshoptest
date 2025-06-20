@@ -1,5 +1,6 @@
 "use client"
 import React from 'react';
+import Image from 'next/image';
 
 export type Product = {
 	id: number;
@@ -39,7 +40,7 @@ const Products: React.FC<ProductsProps> = React.memo(({
 	<section aria-labelledby="products-heading">
 		<h2 id="products-heading" className="sr-only">Товары</h2>
 		<ul id="products-list" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-7" role="list">
-			{products.map((product) => {
+			{products.map((product, idx) => {
 				const qty = cart[product.id] || 0;
 				const isVisible = animatedIds.has(product.id);
 				return (
@@ -50,7 +51,15 @@ const Products: React.FC<ProductsProps> = React.memo(({
 						tabIndex={0}
 						aria-label={`Товар: ${product.title}`}
 					>
-						<img src={product.image_url} alt={product.title} className="w-full h-28 sm:h-40 object-cover rounded mb-2 sm:mb-3 bg-white" />
+						<Image
+							src={product.image_url}
+							alt={product.title}
+							width={320}
+							height={160}
+							className="w-full h-28 sm:h-40 object-cover rounded mb-2 sm:mb-3 bg-white"
+							style={{ objectFit: 'cover', width: 'auto', height: 'auto' }}
+							priority={idx === 0}
+						/>
 						<h3 className="font-bold text-sm sm:text-base mb-1 text-center w-full truncate">{product.title}</h3>
 						<p className="text-gray-700 text-xs mb-2 text-center w-full break-words max-h-12 sm:max-h-16 overflow-hidden">{product.description}</p>
 						<div className="font-semibold mb-2 text-center w-full text-xs sm:text-base">цена: {product.price}₽</div>

@@ -4,7 +4,6 @@ import ErrorBoundary from './ErrorBoundary';
 
 function ProblemChild() {
   throw new Error('Test error');
-  // eslint-disable-next-line no-unreachable
   return <div />;
 }
 
