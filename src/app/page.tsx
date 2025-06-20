@@ -1,10 +1,10 @@
 "use client"
-import Cart from "@/components/Cart";
+import CartContainer from "@/components/CartContainer";
 import Header from "@/components/Header";
-import Products, { CartProvider, ProductsContext } from "@/components/Products";
-import Reviews from "@/components/Reviews";
+import ProductsContainer from "@/components/ProductsContainer";
+import { CartProvider, ProductsContext, ProductsContextType } from "@/components/ProductsContext";
+import ReviewsContainer from "@/components/ReviewsContainer";
 import React, { useState } from "react";
-import type { ProductsContextType } from "@/components/Products";
 
 type Product = ProductsContextType["productsMap"][number];
 
@@ -16,9 +16,9 @@ export default function Home() {
         <main className="min-h-screen bg-[#232323]">
           <div className="max-w-5xl mx-auto px-2 sm:px-4 py-4 sm:py-8 flex flex-col gap-6 sm:gap-10">
             <Header />
-            <Reviews />
-            <Cart />
-            <Products />
+            <ReviewsContainer />
+            <CartContainer />
+            <ProductsContainer />
           </div>
         </main>
       </ProductsContext.Provider>
