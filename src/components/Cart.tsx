@@ -85,7 +85,7 @@ const Cart = () => {
     <section className="bg-[#e0e0e0] rounded-lg shadow p-6 max-w-lg mx-auto w-full">
       <h2 className="text-lg font-semibold mb-4 text-black">Добавленные товары</h2>
       {cartItems.length > 0 && (
-        <div className="mb-4">
+        <div className="mb-4 transition-[max-height] duration-500 ease-in-out overflow-hidden" style={{ maxHeight: `${cartItems.length * 56 + 48}px` }}>
           <div className="bg-[#d1d1d1] rounded p-2 text-black text-sm">
             <div className="grid grid-cols-[1fr_60px_80px_32px] items-center font-semibold pb-1 border-b border-[#c0c0c0] mb-1 text-xs uppercase tracking-wide">
               <span>Товар</span>

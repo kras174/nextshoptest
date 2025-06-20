@@ -54,6 +54,7 @@ const Products = () => {
 	const loader = useRef<HTMLDivElement | null>(null);
 	const { cart, setCart } = useCart();
 	const { setProductsMap } = useProductsMap();
+	const [animatedIds, setAnimatedIds] = useState<Set<number>>(new Set());
 
 	const fetchProducts = useCallback(async (pageNum: number) => {
 		setLoading(true);
@@ -98,6 +99,18 @@ const Products = () => {
 		};
 	}, [hasMore, loading]);
 
+	useEffect(() => {
+		// Анимировать только новые товары
+		products.forEach((product) => {
+			if (!animatedIds.has(product.id)) {
+				setTimeout(() => {
+					setAnimatedIds((prev) => new Set(prev).add(product.id));
+				}, 50);
+			}
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [products]);
+
 	const handleBuy = (id: number) => {
 		setCart((prev) => ({ ...prev, [id]: 1 }));
 	};
@@ -137,8 +150,13 @@ const Products = () => {
 			<div id="products-list" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
 				{products.map((product) => {
 					const qty = cart[product.id] || 0;
+					const isVisible = animatedIds.has(product.id);
 					return (
-						<div key={product.id} className="bg-[#e0e0e0] rounded-lg shadow flex flex-col items-center p-4 text-black min-h-[370px]">
+						<div
+							key={product.id}
+							className={`bg-[#e0e0e0] rounded-lg shadow flex flex-col items-center p-4 text-black min-h-[370px] transition-all duration-500 ease-out
+								${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+						>
 							<img src={product.image_url} alt={product.title} className="w-full h-40 object-cover rounded mb-3 bg-white" />
 							<h3 className="font-bold text-base mb-1 text-center w-full truncate">{product.title}</h3>
 							<p className="text-gray-700 text-xs mb-2 text-center w-full break-words max-h-16 overflow-hidden">{product.description}</p>
