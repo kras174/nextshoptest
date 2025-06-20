@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useCart } from './Products';
 import { useProductsMap } from './Products';
 
-const phoneRegex = /^\+7\s?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/;
-
 function Modal({ open, onClose, children }: { open: boolean; onClose: () => void; children: React.ReactNode }) {
   const [show, setShow] = useState(open);
   useEffect(() => {
@@ -92,7 +90,7 @@ const Cart = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phoneRegex.test(phone)) {
+    if (!phoneDigits || phoneDigits.length !== 11) {
       setError('Введите корректный номер телефона в формате +7 (XXX) XXX-XX-XX');
       return;
     }
@@ -103,7 +101,7 @@ const Cart = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          phone,
+          phone: phoneDigits,
           cart: Object.entries(cart).map(([id, qty]) => ({ id: Number(id), quantity: qty })),
         }),
       });
