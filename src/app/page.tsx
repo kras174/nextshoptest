@@ -16,7 +16,7 @@ export default function Home() {
     <CartProvider>
       <ProductsContext.Provider value={{ productsMap, setProductsMap }}>
         <ErrorBoundary>
-          <main className="min-h-screen bg-[#232323]">
+          <main id="main-content" className="min-h-screen bg-[#232323]" tabIndex={-1}>
             <div className="max-w-5xl mx-auto px-2 sm:px-4 py-4 sm:py-8 flex flex-col gap-6 sm:gap-10">
               <Header />
               <ReviewsContainer />

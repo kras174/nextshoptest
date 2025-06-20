@@ -25,15 +25,29 @@ export type CartProps = {
 
 function Modal({ open, onClose, children }: { open: boolean; onClose: () => void; children: React.ReactNode }) {
   const [show, setShow] = React.useState(open);
+  const modalRef = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
     if (open) setShow(true);
     else setTimeout(() => setShow(false), 250);
   }, [open]);
+  // Focus trap
+  React.useEffect(() => {
+    if (open && modalRef.current) {
+      modalRef.current.focus();
+    }
+  }, [open]);
   return (
     <>
       {(open || show) && (
-        <div className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 transition-opacity duration-200 ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        <div
+          className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 transition-opacity duration-200 ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Успешно оформлено"
+        >
           <div
+            ref={modalRef}
+            tabIndex={-1}
             className={`bg-[#e0e0e0] rounded-2xl shadow-2xl p-7 max-w-xs w-full text-center relative transition-all duration-300
               ${open ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
             style={{ minWidth: 280 }}
@@ -41,7 +55,7 @@ function Modal({ open, onClose, children }: { open: boolean; onClose: () => void
             <button
               className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold"
               onClick={onClose}
-              aria-label="Закрыть"
+              aria-label="Закрыть модальное окно"
             >
               ×
             </button>
@@ -82,39 +96,29 @@ const Cart: React.FC<CartProps> = React.memo(({
   };
 
   return (
-    <section className="bg-[#e0e0e0] rounded-lg shadow p-3 sm:p-6 max-w-full sm:max-w-lg mx-auto w-full">
-      <h2 className="text-lg font-semibold mb-4 text-black">Добавленные товары</h2>
-      {cartItems.length > 0 && (
-        <div className="mb-4 overflow-x-auto">
-          <div className="bg-[#d1d1d1] rounded p-2 text-black text-xs sm:text-sm min-w-[340px]">
-            <div className="grid grid-cols-[1fr_48px_64px_28px] sm:grid-cols-[1fr_60px_80px_32px] items-center font-semibold pb-1 border-b border-[#c0c0c0] mb-1 text-xs uppercase tracking-wide">
-              <span>Товар</span>
-              <span className="text-center">Кол-во</span>
-              <span className="text-right">Сумма</span>
-              <span></span>
-            </div>
-            {cartItems.map((item) => (
-              <div
-                key={item.id}
-                className={`grid grid-cols-[1fr_48px_64px_28px] sm:grid-cols-[1fr_60px_80px_32px] items-center py-1 border-b border-[#c0c0c0] last:border-b-0 transition-all duration-300 ${removing === item.id ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
+    <section className="bg-[#e0e0e0] rounded-lg shadow p-3 sm:p-6 max-w-full sm:max-w-lg mx-auto w-full" aria-labelledby="cart-heading">
+      <h2 id="cart-heading" className="text-lg font-semibold mb-4 text-black">Добавленные товары</h2>
+      {cartItems.length > 0 &&
+        <ul className="divide-y divide-gray-300" role="list">
+          {cartItems.map((item) => (
+            <li key={item.id} className={`flex items-center justify-between py-2 transition-opacity duration-300 ${removing === item.id ? 'opacity-0' : 'opacity-100'}`}>
+              <span className="font-medium text-black text-sm sm:text-base flex-1 truncate" title={item.title}>{item.title}</span>
+              <span className="text-gray-700 text-xs sm:text-base mx-2">{item.price}₽ × {item.qty}</span>
+              <button
+                className="ml-2 text-gray-400 hover:text-red-500 text-lg font-bold transition-colors"
+                onClick={() => handleRemoveWithFade(item.id)}
+                aria-label={`Удалить ${item.title} из корзины`}
+                tabIndex={0}
               >
-                <span className="truncate pr-2">{item.title}</span>
-                <span className="text-center">x{item.qty}</span>
-                <span className="text-right">{item.price * item.qty}₽</span>
-                <button
-                  type="button"
-                  className="ml-2 text-gray-400 hover:text-red-600 text-lg font-bold px-1 sm:px-2"
-                  onClick={() => handleRemoveWithFade(item.id)}
-                  aria-label="Удалить товар"
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      <form className="flex flex-col gap-3" onSubmit={onSubmit}>
+                ×
+              </button>
+            </li>
+          ))}
+        </ul>
+      }
+      {cartItems.length === 0 && <div className="text-gray-500 text-center my-8" role="status">Корзина пуста</div>}
+      <form className="flex flex-col gap-3" onSubmit={onSubmit} role="form" aria-labelledby="cart-form-heading">
+        <span id="cart-form-heading" className="sr-only">Форма заказа</span>
         <div className="flex flex-row items-center gap-2">
           <InputMask
             mask="+7 (999) 999-99-99"
@@ -133,6 +137,9 @@ const Cart: React.FC<CartProps> = React.memo(({
                 className="border rounded px-2 sm:px-3 py-2 bg-white text-black flex-1 text-sm sm:text-base"
                 placeholder="+7 (___) ___-__-__"
                 autoComplete="tel"
+                aria-label="Телефон для связи"
+                aria-required="true"
+                aria-invalid={!!error}
               />
             )}
           </InputMask>
@@ -140,11 +147,12 @@ const Cart: React.FC<CartProps> = React.memo(({
             type="submit"
             className="bg-black text-white rounded px-4 sm:px-6 py-2 font-semibold text-sm sm:text-base h-full"
             disabled={loading}
+            aria-label="Оформить заказ"
           >
             {loading ? '...' : 'заказать'}
           </button>
         </div>
-        {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
+        {error && <div className="text-red-500 text-sm mt-1" role="alert">{error}</div>}
       </form>
       <div className="mt-4 flex flex-row justify-between text-black text-base font-semibold">
         <span>Итого:</span>

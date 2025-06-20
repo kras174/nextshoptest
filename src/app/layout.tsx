@@ -27,6 +27,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <a href="#main-content" className="skip-to-content absolute left-2 top-2 z-50 bg-black text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform -translate-y-16 focus:translate-y-0" tabIndex={0}>
+          Skip to main content
+        </a>
         {children}
       </body>
     </html>
