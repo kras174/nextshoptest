@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NextShopTest
 
-## Getting Started
+## Описание
 
-First, run the development server:
+NextShopTest — это тестовый интернет-магазин, реализованный на Next.js, React, TypeScript и TailwindCSS. Проект создан по макету из Figma и включает интеграцию с внешними API для товаров и отзывов.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Реализовано
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Современный дизайн, полностью соответствующий макету из Figma (цвета, сетка, стили, отступы, анимации)
+- Тёмный фон страницы, стилизованный заголовок
+- Блок отзывов с API, карточки отзывов в одну строку
+- Корзина:
+  - Табличный список товаров с выравниванием по сетке
+  - Возможность увеличивать/уменьшать количество, удалять товары крестиком
+  - Итоговая сумма, оформление заказа
+  - Валидация телефона
+  - Красивая модалка об успешном заказе
+- Список товаров:
+  - Получение с API, бесконечная прокрутка
+  - Карточки с анимацией появления
+  - Кнопки "купить", "+", "-", поле для ввода количества
+  - Стилизация под макет
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Как запустить
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Установите зависимости:
+   ```bash
+   npm install
+   ```
+2. Запустите dev-сервер:
+   ```bash
+   npm run dev
+   ```
+3. Откройте [http://localhost:3000](http://localhost:3000) в браузере.
 
-## Learn More
+## Предложения по улучшению
+- Улучшить обработку ошибок API
+- Добавить индикаторы загрузки для всех асинхронных операций
+- Реализовать полноценную страницу успешного заказа
 
-To learn more about Next.js, take a look at the following resources:
+## Комментарии
+- Проект максимально приближен к макету, включая сетку, цвета, анимации и UX.
+- Для теста интеграции с API используются публичные эндпоинты, поэтому возможны задержки или ошибки, не связанные с кодом.
+- TailwindCSS позволяет быстро и гибко менять стили под любые требования.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Автор:** Anton Krasilnikov
